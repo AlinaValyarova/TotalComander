@@ -213,10 +213,12 @@ namespace TotalComander
         {
             if (e.Button == MouseButtons.Right)
             {
-                label5.Text = listBox1.SelectedItem.ToString();
+                i = listBox1.IndexFromPoint(e.Location);
+
+                label5.Text = listBox1.Items[i].ToString();
                 //select the item under the mouse pointer
                 listBox1.SelectionMode = SelectionMode.None;
-                i = listBox1.IndexFromPoint(e.Location);
+
                 if (i != -1)
                 {
                     contextMenuStrip1.Show();
@@ -234,7 +236,7 @@ namespace TotalComander
         {
             if (textBox1.Text != "-")
             {
-                string path = label5.Text + $"/{textBox1.Text}";
+                string path = label5.Text + $"\\{textBox1.Text}\\";
                 Directory.CreateDirectory(path);
                 MessageBox.Show("Yes");
                 panel1.Hide();
