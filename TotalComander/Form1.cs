@@ -22,6 +22,7 @@ namespace TotalComander
             InitializeComponent();
 
             panel1.Visible = false;
+            panel2.Visible = false;
             ToolStripMenuItem first = new ToolStripMenuItem("Создать");
             ToolStripMenuItem second = new ToolStripMenuItem("Удалить");
             ToolStripMenuItem third = new ToolStripMenuItem("Переименовать");
@@ -31,10 +32,9 @@ namespace TotalComander
             contextMenuStrip1.Items.AddRange(new[] { first, second, third, fourth, fith});
             // ассоциируем контекстное меню с текстовым полем
             listBox1.ContextMenuStrip = contextMenuStrip1;
-            listBox1.ContextMenuStrip = contextMenuStrip1;
-            listBox1.ContextMenuStrip = contextMenuStrip1;
-            listBox1.ContextMenuStrip = contextMenuStrip1;
-            listBox1.ContextMenuStrip = contextMenuStrip1;
+            listBox2.ContextMenuStrip = contextMenuStrip1;
+            listBox3.ContextMenuStrip = contextMenuStrip1;
+            listBox4.ContextMenuStrip = contextMenuStrip1;
             // устанавливаем обработчики событий для меню
             first.Click += first_Click;
             second.Click += second_Click;
@@ -43,6 +43,9 @@ namespace TotalComander
             fith.Click += fith_Click;
 
             listBox1.ContextMenuStrip = contextMenuStrip1;
+            listBox2.ContextMenuStrip = contextMenuStrip1;
+            listBox3.ContextMenuStrip = contextMenuStrip1;
+            listBox4.ContextMenuStrip = contextMenuStrip1;
         }
 
 
@@ -64,25 +67,23 @@ namespace TotalComander
 
             if (result == DialogResult.Yes)
             {
-                Directory.Delete(label5.Text);
+                Directory.Delete(label8.Text);
             }    
         }
         private void third_Click(object sender, EventArgs e)
         {
+            panel2.Visible = true;
 
         }
         private void fourth_Click(object sender, EventArgs e)
         {
-            //foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
-            //    Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
-
-            ////Скопировать все файлы. И перезаписать(если такие существуют)
-            //foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
-            //    File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+            Directory.CreateDirectory(label5.Text.Replace(label5.Text, label6.Text));
+            File.Copy(label6.Text, label6.Text.Replace(label5.Text, label6.Text), true);
         }
         private void fith_Click(object sender, EventArgs e)
         {
-
+            DirectoryInfo dirInfo = new DirectoryInfo(label5.Text) ;
+            MessageBox.Show($"Название каталога: {dirInfo.Name} \n Полное название каталога: {dirInfo.FullName} \n Время создания каталога: {dirInfo.CreationTime} \n Корневой каталог: { dirInfo.Root}");
         }
         public List<string> files = new List<string>();
         public List<string> dirs = new List<string>();
@@ -90,39 +91,48 @@ namespace TotalComander
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-                string path2 = listBox1.SelectedItem.ToString();
+            string path2;
+            if (listBox1.SelectedItem != null)
+            {
+                path2 = listBox1.SelectedItem.ToString();
                 label5.Text = path2;
-
-                listBox1.Items.Clear();
-                listBox2.Items.Clear();
-
-                List<string> newfiles = new List<string>();
-                List<string> newdirs = new List<string>();
-
-                try
-                {
-                    files.Clear();
-                    files.AddRange(Directory.GetFiles(path2));
-                    dirs.Clear();
-                    dirs.AddRange(Directory.GetDirectories(path2));
-                }
-                catch (UnauthorizedAccessException a2)
-                {
-
-                }
-
-                foreach (string dir in dirs)
-                {
-                    listBox1.Items.Add(dir);
-                }
+            }
+            else
+            {
+                path2 = label5.Text;
+            }
 
 
-                foreach (string file in files)
-                {
+            listBox1.Items.Clear();
+            listBox2.Items.Clear();
 
-                    listBox2.Items.Add(file);
-                }
+            List<string> newfiles = new List<string>();
+            List<string> newdirs = new List<string>();
+
+            try
+            {
+                files.Clear();
+                files.AddRange(Directory.GetFiles(path2));
+                dirs.Clear();
+                dirs.AddRange(Directory.GetDirectories(path2));
+            }
+            catch (UnauthorizedAccessException a2)
+            {
+
+            }
+
+            foreach (string dir in dirs)
+            {
+                listBox1.Items.Add(dir);
+            }
+
+
+            foreach (string file in files)
+            {
+
+                listBox2.Items.Add(file);
+            }
+
 
 
         }
@@ -214,14 +224,14 @@ namespace TotalComander
             if (e.Button == MouseButtons.Right)
             {
                 i = listBox1.IndexFromPoint(e.Location);
-
-                label5.Text = listBox1.Items[i].ToString();
+                label8.Text = listBox1.Items[i].ToString();
                 //select the item under the mouse pointer
                 listBox1.SelectionMode = SelectionMode.None;
 
                 if (i != -1)
                 {
                     contextMenuStrip1.Show();
+
                 }
             }
 
@@ -245,6 +255,65 @@ namespace TotalComander
             {
                 MessageBox.Show("No");
             }
+        }
+
+        private void listBox2_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                i = listBox2.IndexFromPoint(e.Location);
+
+                label5.Text = listBox2.Items[i].ToString();
+                //select the item under the mouse pointer
+                listBox2.SelectionMode = SelectionMode.None;
+
+                if (i != -1)
+                {
+                    contextMenuStrip1.Show();
+                }
+            }
+
+        }
+
+        private void listBox3_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                i = listBox3.IndexFromPoint(e.Location);
+
+                label6.Text = listBox3.Items[i].ToString();
+                //select the item under the mouse pointer
+                listBox3.SelectionMode = SelectionMode.None;
+
+                if (i != -1)
+                {
+                    contextMenuStrip1.Show();
+                }
+            }
+        }
+
+        private void listBox4_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                i = listBox4.IndexFromPoint(e.Location);
+
+                label6.Text = listBox4.Items[i].ToString();
+                //select the item under the mouse pointer
+                listBox4.SelectionMode = SelectionMode.None;
+
+                if (i != -1)
+                {
+                    contextMenuStrip1.Show();
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Directory.CreateDirectory($@"{label5.Text}");
+            Directory.Move($@"{label5.Text}", $@"{textBox2.Text}");
+            Directory.Delete($@"{label5.Text}");
         }
     }
 }
